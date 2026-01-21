@@ -1,3 +1,5 @@
+type NestedTreeItem<T> = T & { children: NestedTreeItem<T>[] };
+
 type VariantProduct = {
    price: number;
    before_price: number;
@@ -29,7 +31,7 @@ type SelectableCategory = {
 const getDiscount = (data: ProductLike): number | undefined => {
    const variants = data.variant_products || [];
    if (variants.length > 0) {
-      const discount_variants = [];
+      const discount_variants: number[] = [];
          variants.forEach((x) => {
             if (x.price < x.before_price) {
                discount_variants.push(
@@ -88,7 +90,7 @@ const search_array_object_tree = (termx: string, dataAllx: TreeNode[]) => {
          return isMatching;
       };
 
-      const filter = (data: TreeNode[], matchedIDS: string[]) => {
+      const filter = (data: TreeNode[], matchedIDS: string[]): TreeNode[] => {
          return data
             .filter((item) => {
                const titleText = typeof item.title === "string" ? item.title : "";
@@ -106,7 +108,7 @@ const search_array_object_tree = (termx: string, dataAllx: TreeNode[]) => {
          children: data,
       };
 
-      const matchedIDS = [];
+      const matchedIDS: string[] = [];
       // find all items IDs that matches our search (or their children does)
       dfs(dataNode, termx, matchedIDS);
 
@@ -122,10 +124,14 @@ const getCategoriesTree = <T extends Record<string, unknown>>(
    data: T[],
    parrent: string | null = null
 ) => {
-      const nest = (items: T[], _id = parrent, link = "categories_id") => {
+      const nest = (
+         items: T[],
+         _id: unknown = parrent,
+         link: string = "categories_id"
+      ): NestedTreeItem<T>[] => {
          return items
             .filter((item) => item[link] === _id)
-            .map((item) => ({ ...item, children: nest(items, item._id) }));
+            .map((item) => ({ ...item, children: nest(items, (item as any)._id, link) }));
       };
 
       const clean = (obj: unknown): unknown => {
@@ -137,7 +143,8 @@ const getCategoriesTree = <T extends Record<string, unknown>>(
                   .map(([k, v]) => [k, clean(v)])
                   .filter(([_, v]) => v !== undefined)
             );
-         return Object.keys(obj).length ? obj : undefined;
+         const objRecord = obj as Record<string, unknown>;
+         return Object.keys(objRecord).length ? objRecord : undefined;
       };
       return clean(nest(data));
 };
@@ -156,8 +163,8 @@ const getCategoriesTreeOptions = <T extends Record<string, unknown>>(
 ) => {
       const nest = (
          items: T[],
-         _id: string | null = null,
-         link = "categories_id"
+         _id: unknown = null,
+         link: string = "categories_id"
       ): TreeOptionNode<T>[] => {
          return items
             .filter((item) => item[link] === _id)
@@ -165,11 +172,11 @@ const getCategoriesTreeOptions = <T extends Record<string, unknown>>(
                ...item,
                value: item._id,
                key: item._id,
-               children: nest(items, item._id),
+               children: nest(items, (item as any)._id, link),
                disabled:
-            nest(items, item._id).length > 0 && option === true ? true : false,
+            nest(items, (item as any)._id, link).length > 0 && option === true ? true : false,
             })).sort(function (a, b) {
-               return a.order - b.order;
+               return ((a as any).order as number) - ((b as any).order as number);
             });
       };
 
@@ -182,7 +189,8 @@ const getCategoriesTreeOptions = <T extends Record<string, unknown>>(
                   .map(([k, v]) => [k, clean(v)])
                   .filter(([_, v]) => v !== undefined)
             );
-         return Object.keys(obj).length ? obj : undefined;
+         const objRecord = obj as Record<string, unknown>;
+         return Object.keys(objRecord).length ? objRecord : undefined;
       };
 
       const firstdata = clean(nest(data));

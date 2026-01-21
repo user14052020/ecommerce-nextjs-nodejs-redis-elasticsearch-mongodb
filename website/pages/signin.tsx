@@ -28,7 +28,7 @@ const SignInPage = () => {
 
    useEffect(() => {
       if (isAuthenticated) {
-         return Router.push("/");
+         void Router.push("/");
       }
    }, [isAuthenticated]);
 

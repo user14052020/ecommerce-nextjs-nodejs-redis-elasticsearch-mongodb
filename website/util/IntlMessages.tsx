@@ -1,13 +1,9 @@
-import type { FC } from "react";
+import type { ComponentProps } from "react";
 import { FormattedMessage } from "react-intl";
 
-type IntlMessageProps = {
-   id: string;
-   values?: Record<string, unknown>;
-   [key: string]: unknown;
-};
+type IntlMessageProps = Omit<ComponentProps<typeof FormattedMessage>, "children">;
 
-const IntlMessages: FC<IntlMessageProps> = (props) => {
+const IntlMessages = (props: IntlMessageProps) => {
    return <FormattedMessage {...props} />;
 };
 

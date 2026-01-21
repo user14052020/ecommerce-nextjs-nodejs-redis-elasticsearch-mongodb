@@ -50,7 +50,7 @@ const SeedMetaSchema = new mongoose.Schema(
     key: { type: String, required: true, unique: true },
     createdAt: { type: Date, default: Date.now },
   },
-  { collection: "seed_meta" }
+  { collection: "seed_meta" },
 );
 
 const SeedMeta = mongoose.model("SeedMeta", SeedMetaSchema);

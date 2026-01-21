@@ -1,0 +1,13 @@
+[
+  {
+    "_id": "ObjectId(\"6132760c1b462209e358d762\")",
+    "isActive": true,
+    "api": [],
+    "order": 2,
+    "title": "Cargo Payment",
+    "created_user": { "name": "Super Admin", "id": "5f65e046fda80175a294c73c" },
+    "__v": 0,
+    "createdAt": "2022-02-03T19:23:24.265Z",
+    "updatedAt": "2022-02-03T19:23:24.265Z"
+  }
+]

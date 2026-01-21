@@ -55,17 +55,17 @@ const Page: NextPage<ContentPageProps> = ({ seo, resData }) => {
 
    const replaceStyle = (dataHtml: string) => {
       return dataHtml
-         .replaceAll("<p>", "<p style='min-height:25px' >")
-         .replaceAll(
-            "<pre>",
-            "<pre  style='min-height:30px; background-color:#dbdbdb; padding:15px' >"
-         )
-         .replaceAll("<img ", "<img class='w-full sm:w-auto' ")
-         .replaceAll(
-            "<div class=\"media-wrap image-wrap ",
-            "<div class=\"media-wrap image-wrap  w-full sm:w-auto "
-         );
-   };
+        .replace(/<p>/g, "<p style='min-height:25px' >")
+        .replace(
+          /<pre>/g,
+          "<pre  style='min-height:30px; background-color:#dbdbdb; padding:15px' >"
+        )
+        .replace(/<img /g, "<img class='w-full sm:w-auto' ")
+        .replace(
+          /<div class="media-wrap image-wrap /g,
+          '<div class="media-wrap image-wrap  w-full sm:w-auto '
+        );
+    };
 
    useEffect(() => {
       setContentDescription(replaceStyle(resData.description));

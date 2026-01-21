@@ -18,9 +18,12 @@ const PoductVariants = dynamic(() => import("@app/app/components/ProductDetail/P
 type ProductImage = {
    image: string;
    [key: string]: unknown;
+   order: number;
 };
 
 type ProductDetail = {
+   _id: string;
+   seo: string;
    title: string;
    description_short?: string;
    keys?: string;
@@ -61,17 +64,19 @@ const Page: NextPage<ProductPageProps> = ({ resData = [], seo = "" }) => {
 
    const replaceStyle = (dataHtml: string) => {
       return dataHtml
-         .replaceAll("<p>", "<p style='min-height:25px' >")
-         .replaceAll(
-            "<pre>",
-            "<pre  style='min-height:30px; background-color:#dbdbdb; padding:15px' >"
-         )
-         .replaceAll("<img ", "<img class='w-full sm:w-auto' ")
-         .replaceAll(
-            "<div class=\"media-wrap image-wrap ",
-            "<div class=\"media-wrap image-wrap  w-full sm:w-auto "
-         );
-   };
+        .replace(/<p>/g, "<p style='min-height:25px' >")
+        .replace(
+          /<pre>/g,
+          "<pre  style='min-height:30px; background-color:#dbdbdb; padding:15px' >"
+        )
+        .replace(/<img /g, "<img class='w-full sm:w-auto' ")
+        .replace(
+          /<div class="media-wrap image-wrap /g,
+          '<div class="media-wrap image-wrap  w-full sm:w-auto '
+        );
+    };
+
+
 
    useEffect(() => {
       getBasket();
@@ -91,7 +96,7 @@ const Page: NextPage<ProductPageProps> = ({ resData = [], seo = "" }) => {
                <ProductGallerry images={state.allImages} />
             </div>
             <div className=" col-span-12 lg:col-span-7">
-               <PoductVariants data={state} seo={seo} />
+               <PoductVariants data={state} />
             </div>
          </div>
 

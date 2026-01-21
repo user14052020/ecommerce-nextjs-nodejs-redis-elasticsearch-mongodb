@@ -8,6 +8,7 @@ import {
    HOME_SLIDER_CATEGORY_ID,
 } from "@root/config";
 import type { GetServerSideProps, NextPage } from "next";
+import type { SliderItem } from "@app/app/components/Home/HomeSlider";
 
 import dynamic from "next/dynamic";
 
@@ -31,6 +32,9 @@ type CategoryItem = {
 };
 
 type ProductItem = {
+   _id: string;
+   seo: string;
+   title: string;
    [key: string]: unknown;
 };
 
@@ -47,18 +51,27 @@ const HomePage: NextPage<HomeProps> = ({
 }) => {
 
 
-   const homeSlider = func.getCategoriesTree(
+   const homeSliderUnknown = func.getCategoriesTree(
       resData,
       HOME_SLIDER_CATEGORY_ID
    );
-   const homeFirstBox = func.getCategoriesTree(
+   const homeSlider: SliderItem[] = Array.isArray(homeSliderUnknown)
+      ? (homeSliderUnknown as SliderItem[])
+      : [];
+   const homeFirstBoxUnknown = func.getCategoriesTree(
       resData,
       HOME_FIRST_BOX_CATEGORY_ID
    );
-   const homeOfferList = func.getCategoriesTree(
+   const homeFirstBox = Array.isArray(homeFirstBoxUnknown)
+      ? homeFirstBoxUnknown
+      : [];
+   const homeOfferListUnknown = func.getCategoriesTree(
       resData,
       HOME_OFFER_LIST_ID
    );
+   const homeOfferList = Array.isArray(homeOfferListUnknown)
+      ? homeOfferListUnknown
+      : [];
 
    const offerItem = resData.find((val) => val._id === HOME_OFFER_LIST_ID);
    const homeOfferListtitle = {

@@ -11,7 +11,7 @@ SwiperCore.use([Navigation, Thumbs, Autoplay]);
 import Link from "next/link";
 import { IMG_URL } from "@root/config";
 
-type SliderItem = {
+export type SliderItem = {
    _id: string;
    link: string;
    image: string;
