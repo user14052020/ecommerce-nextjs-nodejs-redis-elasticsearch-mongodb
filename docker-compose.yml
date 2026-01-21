@@ -1,0 +1,81 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: nextjs_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: nextjs_redis
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: nextjs_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: nextjs_backend
+    ports:
+      - "5001:5001"
+    environment:
+      - ATLAS_URI=mongodb://mongo:27017/nextjs
+      - PASPORTJS_KEY=nextjskey
+      - REDIS_URL=redis://redis:6379
+      - REDIS_TTL_SECONDS=60
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_PREFIX=nextjs
+      - ELASTICSEARCH_REINDEX_ON_START=true
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8000
+    depends_on:
+      - mongo
+      - redis
+      - elasticsearch
+
+  admin:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+      args:
+        API_URL: http://localhost:5001
+        WEBSITE_URL: http://localhost:3000
+        IMG_URL: http://localhost:5001
+    container_name: nextjs_admin
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
+
+  website:
+    build:
+      context: .
+      dockerfile: website/Dockerfile
+      args:
+        API_URL: http://localhost:5001
+        WEBSITE_URL: http://localhost:3000
+        IMG_URL: http://localhost:5001
+    container_name: nextjs_website
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+  elastic_data:

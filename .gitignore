@@ -1,0 +1,8 @@
+/*.jpg
+/*.jpeg
+/*.png
+/screen
+/admin/public/images/uploads/
+*.zip
+.DS_Store
+

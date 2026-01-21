@@ -1,0 +1,22 @@
+{
+  "name": "nextjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ecosystem.config.js",
+  "scripts": {
+    "allnpmi": "npm --prefix website i -f && npm --prefix admin i -f && npm --prefix backend i -f",
+    "allnpmdev": "npm --prefix website run dev & npm --prefix admin run dev & npm --prefix backend run dev",
+    "allnpmbuild": "npm --prefix website run build && npm --prefix admin run build && npm --prefix backend run build",
+    "start": " pm2 start ecosystem.config.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozgurmuraterhan/nextjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ozgurmuraterhan/nextjs/issues"
+  },
+  "homepage": "https://github.com/ozgurmuraterhan/nextjs#readme"
+}
