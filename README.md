@@ -1,4 +1,5 @@
 # NextJS eCommerce
+<img width="1903" height="925" alt="Screenshot 2026-01-22 at 11 50 27" src="https://github.com/user-attachments/assets/7a5e864e-7a90-4220-939c-27ece170560f" />
 
 Интернет-магазин на Node.js/Express/MongoDB с двумя интерфейсами: публичный сайт (Next.js) и админ‑панель (Next.js). Проект использует сервисную архитектуру, Elasticsearch для поиска и Redis для кэша. Сайт мультиязычный.
 
