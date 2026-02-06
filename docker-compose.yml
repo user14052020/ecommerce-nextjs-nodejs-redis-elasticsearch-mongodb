@@ -55,10 +55,20 @@ services:
       args:
         API_URL: http://localhost:5001
         WEBSITE_URL: http://localhost:3000
-        IMG_URL: http://localhost:5001
+        IMG_URL: http://localhost:8000
+        API_URL_INTERNAL: http://backend:5001
+        NEXT_PUBLIC_API_URL: http://localhost:5001
+        NEXT_PUBLIC_WEBSITE_URL: http://localhost:3000
+        NEXT_PUBLIC_IMG_URL: http://localhost:8000
     container_name: nextjs_admin
     ports:
       - "8000:8000"
+    environment:
+      - API_URL_INTERNAL=http://backend:5001
+      - NEXT_PUBLIC_API_URL=http://localhost:5001
+      - NEXT_PUBLIC_WEBSITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_IMG_URL=http://localhost:8000
+      - IMG_URL_INTERNAL=http://localhost:8000
     depends_on:
       - backend
 
@@ -69,10 +79,20 @@ services:
       args:
         API_URL: http://localhost:5001
         WEBSITE_URL: http://localhost:3000
-        IMG_URL: http://localhost:5001
+        IMG_URL: http://localhost:8000
+        API_URL_INTERNAL: http://backend:5001
+        NEXT_PUBLIC_API_URL: http://localhost:5001
+        NEXT_PUBLIC_WEBSITE_URL: http://localhost:3000
+        NEXT_PUBLIC_IMG_URL: http://localhost:8000
     container_name: nextjs_website
     ports:
       - "3000:3000"
+    environment:
+      - API_URL_INTERNAL=http://backend:5001
+      - NEXT_PUBLIC_API_URL=http://localhost:5001
+      - NEXT_PUBLIC_WEBSITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_IMG_URL=http://localhost:8000
+      - IMG_URL_INTERNAL=http://localhost:8000
     depends_on:
       - backend
 

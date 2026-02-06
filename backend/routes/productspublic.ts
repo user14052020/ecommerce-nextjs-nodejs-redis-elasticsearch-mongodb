@@ -31,8 +31,12 @@ router.route("/home").post(
 router.route("/").post(
   asyncHandler(async (req: Request, res: Response) => {
     const service = getPublicProductsService();
-    const data = await service.search(req.body);
-    res.json(data);
+    const { items, source, error } = await service.search(req.body);
+    res.set("x-search-source", source);
+    if (error) {
+      res.set("x-search-error", error);
+    }
+    res.json(items);
   })
 );
 

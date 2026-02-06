@@ -104,40 +104,61 @@ class PublicProductsService {
     return newData;
   }
 
-  async search(body: SearchBody) {
+  async search(body: SearchBody): Promise<{
+    items: SearchResult[];
+    source: "elasticsearch" | "mongo";
+    error?: string;
+  }> {
     const key = cacheKey(
       `search:${Buffer.from(JSON.stringify(body)).toString("base64")}`
     );
-    return withCache<SearchResult[]>(key, 30, async () => {
+    return withCache(key, 30, async () => {
       if (this.searchService?.isEnabled()) {
-        const results = await this.searchService.searchProducts(body);
-        if (!results.ids.length) {
-          return [];
-        }
-        const objectIds = results.ids.map((id) => new mongoose.Types.ObjectId(id));
-        const data = await Products.aggregate([
-          {
-            $match: {
-              _id: { $in: objectIds },
-              isActive: true,
+        try {
+          const results = await this.searchService.searchProducts(body);
+          if (!results.ids.length) {
+            return { items: [], source: "elasticsearch" };
+          }
+          const objectIds = results.ids.map(
+            (id) => new mongoose.Types.ObjectId(id)
+          );
+          const data = await Products.aggregate([
+            {
+              $match: {
+                _id: { $in: objectIds },
+                isActive: true,
+              },
             },
-          },
-          {
-            $lookup: {
-              from: "productimages",
-              localField: "_id",
-              foreignField: "product_id",
-              as: "allImages",
+            {
+              $lookup: {
+                from: "productimages",
+                localField: "_id",
+                foreignField: "product_id",
+                as: "allImages",
+              },
             },
-          },
-        ]);
+          ]);
 
-        const dataMap = new Map(data.map((item) => [String(item._id), item]));
-        return results.ids
-          .map((id) => dataMap.get(String(id)))
-          .filter((item): item is SearchResult => Boolean(item));
+          const dataMap = new Map(data.map((item) => [String(item._id), item]));
+          const items = results.ids
+            .map((id) => dataMap.get(String(id)))
+            .filter((item): item is SearchResult => Boolean(item));
+          return { items, source: "elasticsearch" };
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : String(error);
+          console.error("elasticsearch search failed, fallback to mongo", error);
+          const items = await this.searchMongo(body);
+          return { items, source: "mongo", error: message };
+        }
       }
 
+      const items = await this.searchMongo(body);
+      return { items, source: "mongo", error: "elasticsearch_disabled" };
+    });
+  }
+
+  private async searchMongo(body: SearchBody): Promise<SearchResult[]> {
       const brandsMongo =
         body.brands.length > 0
           ? {
@@ -239,8 +260,7 @@ class PublicProductsService {
         },
       ] as unknown as mongoose.PipelineStage[];
 
-      return Products.aggregate(mongoPost);
-    });
+    return Products.aggregate(mongoPost);
   }
 }
 

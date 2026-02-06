@@ -53,21 +53,19 @@ const jsonConfig = {
     PAYMENT_STRIPE_METHOD_ID: "6132787ae4c2740b7aff7320"
 }
 
-if (process.env.NODE_ENV == 'development') {
-    jsonConfig.API_URL = "http://localhost:5001"
-    jsonConfig.WEBSITE_URL = "http://localhost:3000"
-    jsonConfig.IMG_URL = "http://localhost:8000"
-}
+const isServer = typeof window === "undefined";
 
-if (process.env.API_URL) {
-    jsonConfig.API_URL = process.env.API_URL
-}
-if (process.env.WEBSITE_URL) {
-    jsonConfig.WEBSITE_URL = process.env.WEBSITE_URL
-}
-if (process.env.IMG_URL) {
-    jsonConfig.IMG_URL = process.env.IMG_URL
-}
+const publicApiUrl = process.env.NEXT_PUBLIC_API_URL || jsonConfig.API_URL;
+const internalApiUrl = process.env.API_URL_INTERNAL || process.env.API_URL || publicApiUrl;
+jsonConfig.API_URL = isServer ? internalApiUrl : publicApiUrl;
+
+const publicWebsiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL || jsonConfig.WEBSITE_URL;
+jsonConfig.WEBSITE_URL = isServer ? (process.env.WEBSITE_URL_INTERNAL || process.env.WEBSITE_URL || publicWebsiteUrl) : publicWebsiteUrl;
+
+const publicImgUrl = process.env.NEXT_PUBLIC_IMG_URL || jsonConfig.IMG_URL;
+jsonConfig.IMG_URL = isServer
+    ? (process.env.IMG_URL_INTERNAL || process.env.IMG_URL || publicImgUrl)
+    : publicImgUrl;
 if (process.env.TOPMENU_SOCIAL_ID) {
     jsonConfig.TOPMENU_SOCIAL_ID = process.env.TOPMENU_SOCIAL_ID
 }

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "goless": "lessc -js public/less/var.less public/css/ant-custom.css  -x",
-    "eslint": " eslint pages/**/**/**/*.js --fix && eslint app/**/**/**/*.js --fix && eslint redux/**/**/**/*.js --fix && eslint util/**/**/**/*.js --fix",
+    "eslint": "eslint src --ext .js,.ts,.tsx --fix",
     "prettier": "prettier --write ."
   },
   "dependencies": {

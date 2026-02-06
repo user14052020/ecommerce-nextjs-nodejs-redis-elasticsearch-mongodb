@@ -1,5 +1,5 @@
 # NextJS eCommerce
-
+<img width="1903" height="925" alt="admin panel" src="https://github.com/user-attachments/assets/7a5e864e-7a90-4220-939c-27ece170560f" />
 Интернет-магазин на Node.js/Express/MongoDB с двумя интерфейсами: публичный сайт (Next.js) и админ‑панель (Next.js). Проект использует сервисную архитектуру, Elasticsearch для поиска и Redis для кэша. Сайт мультиязычный.
 
 ## Стек
@@ -18,12 +18,26 @@
 - `/api/v1` для версионирования API, `/health` для healthcheck
 - Автоматическое первичное заполнение БД при первом запуске
 
+## FSD (Feature-Sliced Design)
+Website и Admin организованы по FSD и используют стандартные слои:
+- `app/` — провайдеры, инициализация, глобальные настройки
+- `pages/` — страницы Next.js
+- `widgets/` — крупные блоки интерфейса
+- `features/` — пользовательские сценарии
+- `entities/` — бизнес‑сущности (basket, user, brands и т.д.)
+- `shared/` — переиспользуемые утилиты, типы, UI
+
+Общие функции/типы/конфиги для всех приложений вынесены в корневой `shared/`:
+- `shared/lib/*` — общие утилиты
+- `shared/types/*` — общие типы
+- `shared/config/*` — общие конфиги (включая i18n)
+
 ## Мультиязычность
 Интерфейсы website и admin используют `react-intl` + локали Ant Design. Текущая локаль хранится в Redux (`settings.locale`) и передается в `LocaleProvider`, который оборачивает приложение в `IntlProvider` и `ConfigProvider`.
 
 Где лежат переводы:
-- website: `website/providerLang/entries/*` + JSON‑файлы в `website/providerLang/locales/`
-- admin: `admin/app/core/providerLang/entries/*` + JSON‑файлы в `admin/app/core/providerLang/locales/`
+- website: `shared/config/i18n/website/entries/*` + JSON‑файлы в `shared/config/i18n/website/locales/`
+- admin: `shared/config/i18n/admin/entries/*` + JSON‑файлы в `shared/config/i18n/admin/locales/`
 
 Список доступных языков и язык по умолчанию задаются в `config.js` (`languageData`, `defaultLanguage`). В админке переключение языка доступно в верхнем хедере; переключатель диспатчит `switchLanguage` и обновляет `settings.locale`.
 

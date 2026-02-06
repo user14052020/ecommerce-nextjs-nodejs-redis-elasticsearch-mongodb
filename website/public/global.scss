@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "@app/public/css/ant-custom.css";
+@import "./css/ant-custom.css";
 
 @layer base {
   html,

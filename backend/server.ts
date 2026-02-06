@@ -18,7 +18,11 @@ const port = Number(process.env.PORT) || 5001;
 app.disable("x-powered-by");
 app.use(express.static(path.join(__dirname, "..", "..", "admin", "public")));
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 app.use(mongoSanitize());
 app.use(compression());
@@ -46,6 +50,7 @@ app.use(
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
+    exposedHeaders: ["x-search-source", "x-search-error"],
   })
 );
 

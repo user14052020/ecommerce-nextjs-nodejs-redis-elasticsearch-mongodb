@@ -24,7 +24,7 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": [
-        "./*"
+        "./src/*"
       ],
       "@root/*": [
         "../*"
@@ -35,7 +35,8 @@
     "next-env.d.ts",
     "**/*.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "../shared/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

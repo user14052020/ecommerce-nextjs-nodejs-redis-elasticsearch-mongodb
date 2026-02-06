@@ -5,7 +5,7 @@
     "dev": "next -- --port 8000",
     "build": "next build",
     "start": "next start -p 8000",
-    "eslint": " eslint pages/**/**/**/*.js --fix && eslint app/**/**/**/*.js --fix && eslint redux/**/**/**/*.js --fix && eslint util/**/**/**/*.js --fix",
+    "eslint": "eslint src --ext .js,.ts,.tsx --fix",
     "prettier": "prettier --write ."
   },
   "dependencies": {
